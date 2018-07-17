@@ -10,7 +10,7 @@ func Provider() *schema.Provider {
 		Schema: map[string]*schema.Schema{
 			"email": &schema.Schema{
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Sensitive:   true,
 				Description: "Aiven email address",
 			},
@@ -22,9 +22,15 @@ func Provider() *schema.Provider {
 			},
 			"password": &schema.Schema{
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Sensitive:   true,
 				Description: "Aiven password",
+			},
+			"token": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				Description: "Aiven Authentication Token",
 			},
 		},
 
@@ -36,6 +42,11 @@ func Provider() *schema.Provider {
 		},
 
 		ConfigureFunc: func(d *schema.ResourceData) (interface{}, error) {
+			if d.Get("api_token") {
+				return aiven.NewTokenClient(
+					d.Get("api_token"),
+				)
+			}
 			return aiven.NewMFAUserClient(
 				d.Get("email").(string),
 				d.Get("otp").(string),
