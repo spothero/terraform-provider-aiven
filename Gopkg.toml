@@ -31,7 +31,8 @@
 
 [[constraint]]
   name = "github.com/jelmersnoeck/aiven"
-  version = "0.0.1"
+  branch = "master"
+  source = "github.com/jelmersnoeck/aiven"
 
 [prune]
   go-tests = true
