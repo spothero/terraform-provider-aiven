@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/jelmersnoeck/aiven"
 )
@@ -13,24 +15,28 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				Sensitive:   true,
 				Description: "Aiven email address",
+				Default:     "",
 			},
 			"otp": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
 				Description: "Aiven One-Time password",
+				Default:     "",
 			},
 			"password": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
 				Description: "Aiven password",
+				Default:     "",
 			},
-			"token": &schema.Schema{
+			"api_token": &schema.Schema{
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
 				Description: "Aiven Authentication Token",
+				Default:     "",
 			},
 		},
 
@@ -42,6 +48,9 @@ func Provider() *schema.Provider {
 		},
 
 		ConfigureFunc: func(d *schema.ResourceData) (interface{}, error) {
+			if d.Get("api_token") == nil && d.Get("email") == nil && d.Get("password") == nil {
+				return nil, errors.New("Must provide an API Token or email and password.")
+			}
 			if d.Get("api_token") != nil {
 				return aiven.NewTokenClient(
 					d.Get("api_token").(string),

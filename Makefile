@@ -5,3 +5,6 @@ dep:
 
 plugin:
 	go build -o terraform-provider-aiven .
+
+install:
+	go install
