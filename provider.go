@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/jelmersnoeck/aiven"
+	"github.com/spothero/aiven"
 )
 
 // Provider returns the Terraform Aiven Provider configuration object.
@@ -42,10 +42,12 @@ func Provider() *schema.Provider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
-			"aiven_project":      resourceProject(),
-			"aiven_service":      resourceService(),
-			"aiven_database":     resourceDatabase(),
-			"aiven_service_user": resourceServiceUser(),
+			"aiven_project":                        resourceProject(),
+			"aiven_project_vpc":                    resourceProjectVpc(),
+			"aiven_project_vpc_peering_connection": resourceProjectVpcPeering(),
+			"aiven_service":                        resourceService(),
+			"aiven_database":                       resourceDatabase(),
+			"aiven_service_user":                   resourceServiceUser(),
 		},
 
 		ConfigureFunc: func(d *schema.ResourceData) (interface{}, error) {
